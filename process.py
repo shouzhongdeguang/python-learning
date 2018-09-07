@@ -19,21 +19,17 @@ for i in range(0,len(DateFolder)):#样品的名称
             DataPath = os.path.join(path,DataFolder[j])
             if os.path.isdir(DataPath):  
                 DataFiles = os.listdir(DataPath)
-                AllData1 =[]
                 AllData = []
                 for k in range(0,len(DataFiles)):#存放60条光谱数据
                     DataFilesPath = os.path.join(DataPath,DataFiles[k])
-                    f = open(DataFilesPath)
-                    Data = []
-                    for line in f.readlines()[14:len(f.readlines())-1]:
-                        p_tmp, E_tmp = [float(m) for m in line.split()] 
-                        Data.append(E_tmp)
-                    AllData1 = mat(Data) 
+                    Data = np.loadtxt(DataFilesPath,skiprows=14)
+                    Data = Data[:,1]
+                    #print(Data)
                     if AllData == []:
-                        AllData = AllData1
+                        AllData = Data
                     else:
-                        AllData = np.vstack((AllData,AllData1))  
-            print(pwd)            
+                        AllData = np.vstack((AllData,Data))  
+            #print(pwd)            
             savepath =  os.path.join(pwd,'pyFinishedTxt',wavelength,datestring) 
             isExist = os.path.exists(savepath) 
             if not isExist:
@@ -41,9 +37,7 @@ for i in range(0,len(DateFolder)):#样品的名称
                 print(savepath+'创建成功')
             else:
                 print(savepath+'目录存在')
-            np.savetxt(os.path.join(savepath,DataFolder[j]+'.txt'),AllData)   
-            print('ddd') 
-                    
+            np.savetxt(os.path.join(savepath,DataFolder[j]+'.txt'),AllData)  
                         
                     
                     #print(lines)
